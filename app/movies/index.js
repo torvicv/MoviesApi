@@ -11,7 +11,7 @@ export default function Movies() {
         url: 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
         headers: {
             accept: 'application/json',
-            Authorization: process.env.AUTHORIZATION_BEARER_API
+            Authorization: process.env.EXPO_PUBLIC_AUTHORIZATION
         }
       };
       
@@ -31,15 +31,17 @@ export default function Movies() {
 
       const Item = ({title, url_image}) => (
         <View>
-          <Image source={{uri: url_image}} style={{ width: 300, height: 300 }} />
-          <Text>{title}</Text>
+          <Image source={{uri: url_image}} style={{ width: 200, height: 200 }} />
+          <Text style={{ fontSize: 20 }}>{title}</Text>
         </View>
       );
 
     return (
         <ScrollView>
             <FlatList data={data} 
-                renderItem={({item}) => <Item url_image={item.url_image} title={item.title} />} />
+                renderItem={
+                  ({item}) => <Item url_image={item.url_image} title={item.title} />
+                  } />
         </ScrollView>
     );
 }
