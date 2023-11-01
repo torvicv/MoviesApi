@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, FlatList, View, Text } from 'react-native';
+import { ScrollView, FlatList, View, Text, Image } from 'react-native';
 
 export default function Movies() {
 
@@ -11,30 +11,35 @@ export default function Movies() {
         url: 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
         headers: {
             accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MDg1Yzg1NmQ3NjM0ZGRiNDljYjA4NTU2NGQ5NTZlNiIsInN1YiI6IjY1NDIzMTY3NmJlYWVhMDEwYjMwZTBiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ss_RfwsHoYaSei6K9n8zTQgNjmBvQzEQKMWPLstq6Rc'
+            Authorization: process.env.AUTHORIZATION_BEARER_API
         }
       };
       
       try {
           axios.request(options)
             .then((response) => {
-                console.log(JSON.stringify(response.data.results));
-                setData(response.data.results);
+                const results = response.data.results.map((item) => {
+                  var data = item;
+                  data.url_image = 'https://image.tmdb.org/t/p/w500/'+item.poster_path;
+                  return data;
+                });
+                setData(results);
             });
       } catch (error) {
           console.error(error);
       }
 
-      const Item = ({title}) => (
+      const Item = ({title, url_image}) => (
         <View>
+          <Image source={{uri: url_image}} style={{ width: 300, height: 300 }} />
           <Text>{title}</Text>
         </View>
       );
 
     return (
-        <SafeAreaView>
+        <ScrollView>
             <FlatList data={data} 
-                renderItem={({item}) => <Item title={item.title} />} />
-        </SafeAreaView>
+                renderItem={({item}) => <Item url_image={item.url_image} title={item.title} />} />
+        </ScrollView>
     );
 }
