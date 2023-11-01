@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { View, FlatList, ScrollView, Image, Text } from 'react-native';
+import { View, FlatList, ScrollView, Image, Text, StyleSheet } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 
 const Shorts = () => {
@@ -59,26 +59,38 @@ const Shorts = () => {
         
       
     const Item = ({title, url_image}) => (
-      <View style={{ marginTop: 30 }}>
+      <View style={[styles.card, styles.elevation]}>
         <Image source={{uri: url_image}} style={{ width: 200, height: 200 }} />
         <Text style={{ fontSize: 20 }}>{title}</Text>
       </View>
     );
 
     return (
-        <ScrollView contentContainerStyle={{ flex: 1, justifyContent: "center", shadowColor: 'grey', marginTop: 20, shadowOffset: 30}}>
+        <ScrollView style={{ }}>
             <SelectList 
                 setSelected={(key) => call('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', key)}
                 data={genres} 
                 save="key"
             />
             <FlatList data={data} 
-                style={{ width: "75%"}}
                 renderItem={
                   ({item}) => <Item url_image={item.url_image} title={item.title} />
                   } />
         </ScrollView>
     );
 }
+
+const styles = StyleSheet.create({
+    card: {
+        backgroundColor: 'white', borderRadius: 12,
+        paddingVertical: 20, marginHorizontal: 30, marginTop: 30, shadowColor: 'black', marginTop: 20, shadowOffset: {width: 10, height: 10},
+      shadowOpacity: 1, shadowRadius: 12, flex: 1, justifyContent: "center", alignItems: 'center', elevation: 20
+    },
+    elevation: {
+      elevation: 20,
+      shadowColor: 'black',
+    },
+  });
+  
 
 export default Shorts;
